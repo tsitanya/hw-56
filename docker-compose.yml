@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+
+  app:
+    build: ./app
+    environment:
+      DB_HOST: postgres
+      DB_NAME: mydb
+      DB_USER: myuser
+      DB_PASS: mypassword
+      REDIS_HOST: redis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:z
+    depends_on:
+      - app
+
+volumes:
+  pgdata:
