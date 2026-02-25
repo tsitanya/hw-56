@@ -40,15 +40,22 @@ def create_user():
     data = request.get_json()
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO users (name, email) VALUES (%s, %s) RETURNING id, name, email",
-                (data["name"], data["email"]))
-    row = cur.fetchone()
-    conn.commit()
-    cur.close()
-    conn.close()
-    r = get_redis()
-    r.delete("users_all")
-    return jsonify({"id": row[0], "name": row[1], "email": row[2]}), 201
+    try:
+        cur.execute(
+            "INSERT INTO users (name, email) VALUES (%s, %s) RETURNING id, name, email",
+            (data["name"], data["email"])
+        )
+        row = cur.fetchone()
+        conn.commit()
+        cur.close()
+        conn.close()
+        get_redis().delete("users_all")
+        return jsonify({"id": row[0], "name": row[1], "email": row[2]}), 201
+    except Exception as e:
+        conn.rollback()
+        cur.close()
+        conn.close()
+        return jsonify({"error": str(e)}), 409
 
 @app.route("/users", methods=["GET"])
 def get_users():

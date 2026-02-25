@@ -1,0 +1,68 @@
+{
+  "title": "Host Metrics",
+  "uid": "host-metrics",
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "refresh": "10s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "RAM Usage %",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [{
+        "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+        "legendFormat": "RAM used %",
+        "datasource": "Prometheus"
+      }],
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 } }
+    },
+    {
+      "id": 2,
+      "title": "CPU Usage %",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [{
+        "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[1m])) * 100)",
+        "legendFormat": "CPU used %",
+        "datasource": "Prometheus"
+      }],
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 } }
+    },
+    {
+      "id": 3,
+      "title": "RAM bytes (used / available / total)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "node_memory_MemTotal_bytes", "legendFormat": "Total", "datasource": "Prometheus" },
+        { "expr": "node_memory_MemAvailable_bytes", "legendFormat": "Available", "datasource": "Prometheus" },
+        { "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes", "legendFormat": "Used", "datasource": "Prometheus" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 4,
+      "title": "Network I/O",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "rate(node_network_receive_bytes_total{device!~\"lo|veth.*|docker.*\"}[1m])", "legendFormat": "RX {{device}}", "datasource": "Prometheus" },
+        { "expr": "rate(node_network_transmit_bytes_total{device!~\"lo|veth.*|docker.*\"}[1m])", "legendFormat": "TX {{device}}", "datasource": "Prometheus" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps" } }
+    },
+    {
+      "id": 5,
+      "title": "System Load",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "node_load1", "legendFormat": "1m", "datasource": "Prometheus" },
+        { "expr": "node_load5", "legendFormat": "5m", "datasource": "Prometheus" },
+        { "expr": "node_load15", "legendFormat": "15m", "datasource": "Prometheus" }
+      ],
+      "fieldConfig": { "defaults": {} }
+    }
+  ]
+}
