@@ -39,18 +39,6 @@
         "datasource": "Prometheus"
       }],
       "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 } }
-    },
-    {
-      "id": 4,
-      "title": "Locks",
-      "type": "timeseries",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
-      "targets": [{
-        "expr": "pg_locks_count{datname=\"mydb\"}",
-        "legendFormat": "{{mode}}",
-        "datasource": "Prometheus"
-      }],
-      "fieldConfig": { "defaults": {} }
     }
   ]
 }
