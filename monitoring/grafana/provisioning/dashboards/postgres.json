@@ -6,7 +6,7 @@
   "refresh": "10s",
   "panels": [
     {
-      "id": 1,
+      "id": 4,
       "title": "Active Connections",
       "type": "timeseries",
       "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
@@ -39,6 +39,39 @@
         "datasource": "Prometheus"
       }],
       "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 } }
+    },
+    {
+  "id": 1,
+  "title": "PostgreSQL Status",
+  "type": "stat",
+  "gridPos": { "x": 0, "y": 24, "w": 6, "h": 4 },
+  "targets": [{
+    "expr": "pg_up",
+    "legendFormat": "DB Status",
+    "datasource": "Prometheus"
+  }],
+  "fieldConfig": {
+    "defaults": {
+      "mappings": [
+        { "type": "value", "options": { "0": { "text": "0 — DOWN", "color": "red" } } },
+        { "type": "value", "options": { "1": { "text": "1 — UP", "color": "green" } } }
+      ],
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          { "color": "red", "value": 0 },
+          { "color": "green", "value": 1 }
+        ]
+      },
+      "color": { "mode": "thresholds" }
     }
+  },
+  "options": {
+    "reduceOptions": { "calcs": ["lastNotNull"] },
+    "orientation": "auto",
+    "textMode": "auto",
+    "colorMode": "background"
+  }
+}
   ]
 }

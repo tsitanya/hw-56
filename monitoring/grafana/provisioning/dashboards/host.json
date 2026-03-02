@@ -40,20 +40,9 @@
         { "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes", "legendFormat": "Used", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "bytes" } }
-    },
+    },    
     {
       "id": 4,
-      "title": "Network I/O",
-      "type": "timeseries",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
-      "targets": [
-        { "expr": "rate(node_network_receive_bytes_total{device!~\"lo|veth.*|docker.*\"}[1m])", "legendFormat": "RX {{device}}", "datasource": "Prometheus" },
-        { "expr": "rate(node_network_transmit_bytes_total{device!~\"lo|veth.*|docker.*\"}[1m])", "legendFormat": "TX {{device}}", "datasource": "Prometheus" }
-      ],
-      "fieldConfig": { "defaults": { "unit": "Bps" } }
-    },
-    {
-      "id": 5,
       "title": "System Load",
       "type": "timeseries",
       "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },

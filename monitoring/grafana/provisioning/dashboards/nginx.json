@@ -32,15 +32,29 @@
     },
     {
       "id": 3,
-      "title": "Dropped Connections (accepted - handled)",
+      "title": "HTTP Status Codes",
       "type": "timeseries",
       "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 },
-      "targets": [{
-        "expr": "rate(nginx_connections_accepted_total[1m]) - rate(nginx_connections_handled_total[1m])",
-        "legendFormat": "Dropped/s",
-        "datasource": "Prometheus"
-      }],
-      "fieldConfig": { "defaults": {} }
+      "targets": [
+        { "expr": "rate(flask_http_request_total{status=\"200\"}[1m])", "legendFormat": "200 OK", "datasource": "Prometheus" },
+        { "expr": "rate(flask_http_request_total{status=\"404\"}[1m])", "legendFormat": "404 Not Found", "datasource": "Prometheus" },
+        { "expr": "rate(flask_http_request_total{status=\"500\"}[1m])", "legendFormat": "500 Error", "datasource": "Prometheus" },
+        { "expr": "rate(flask_http_request_total{status=\"503\"}[1m])", "legendFormat": "503 Unavailable", "datasource": "Prometheus" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps" },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "200 OK" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "404 Not Found" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "500 Error" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "503 Unavailable" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }] }
+        ]
+      }
+      
     }
   ]
-}
+} 

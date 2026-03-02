@@ -3,8 +3,11 @@ import psycopg2
 import redis
 import json
 import os
+from prometheus_flask_exporter import PrometheusMetrics
 
-app = Flask(__name__)
+app = Flask(__name__) 
+metrics = PrometheusMetrics(app)  
+
 
 def get_db():
     return psycopg2.connect(
