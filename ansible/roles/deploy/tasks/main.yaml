@@ -1,0 +1,16 @@
+---
+- name: Create namespaces
+  shell: k3s kubectl create namespace {{ item }} --dry-run=client -o yaml | k3s kubectl apply -f -
+  loop:
+    - app
+    - database
+    - monitoring
+
+- name: Copy argocd manifests to server
+  copy:
+    src: "{{ playbook_dir }}/../argocd/"
+    dest: /tmp/argocd/
+
+- name: Apply ArgoCD apps
+  shell: k3s kubectl apply -f /tmp/argocd/
+  become: true

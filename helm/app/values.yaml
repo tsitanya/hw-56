@@ -1,0 +1,12 @@
+image:
+  repository: tsitanya/flask-crud
+  tag: latest
+
+db:
+  host: postgres.database.svc.cluster.local
+  name: mydb
+  user: myuser
+  password: mypassword
+
+redis:
+  host: redis.app.svc.cluster.local

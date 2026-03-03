@@ -1,0 +1,23 @@
+---
+- name: Install k3s
+  shell: curl -sfL https://get.k3s.io | sh -
+  args:
+    creates: /usr/local/bin/k3s
+
+- name: Enable and start k3s service
+  systemd:
+    name: k3s
+    enabled: true
+    state: started
+
+- name: Wait for k3s ready
+  shell: k3s kubectl get nodes
+  retries: 15
+  delay: 10
+  register: result
+  until: result.rc == 0
+
+- name: Make kubeconfig accessible
+  shell: |
+    mkdir -p /root/.kube
+    cp /etc/rancher/k3s/k3s.yaml /root/.kube/config

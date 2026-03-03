@@ -1,0 +1,7 @@
+---
+- hosts: k3s
+  become: true
+  roles:
+    - k3s
+    - argocd
+    - deploy
