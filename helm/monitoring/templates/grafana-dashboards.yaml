@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+data:
+  host.json: {{ .Files.Get "dashboards/host.json" | quote }}
+  nginx.json: {{ .Files.Get "dashboards/nginx.json" | quote }}
+  postgres.json: {{ .Files.Get "dashboards/postgres.json" | quote }}
